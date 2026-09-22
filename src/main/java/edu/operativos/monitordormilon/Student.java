@@ -9,17 +9,21 @@ public class Student extends Thread{
     private Semaphore monitorChair; 
     private Semaphore corridorChairs; 
     private Semaphore isSleep;
-    private Semaphore  attending;
+    private Semaphore  call;
+    private Semaphore teaching;
     
     
 
-    public Student(String name, Semaphore monitorChair, Semaphore corridorChairs, Semaphore isSleep, Semaphore attending){
+    public Student(String name, Semaphore monitorChair, Semaphore corridorChairs, Semaphore isSleep, Semaphore call, 
+        Semaphore teaching
+    ){
         super();
         this.name = name;
         this.monitorChair = monitorChair; 
         this.corridorChairs = corridorChairs; 
         this.isSleep = isSleep;
-        this.attending = attending;
+        this.call = call;
+        this.teaching = teaching;
     }
 
     public void run(){
@@ -32,7 +36,7 @@ public class Student extends Thread{
                 if(this.monitorChair.tryAcquire()){
                     this.isSleep.release();
                     System.out.println(this.name + "EN MONITORIA");
-                    this.attending.acquire();
+                    this.call.acquire();
                     this.monitorChair.release();
                     
                 }else if(this.corridorChairs.tryAcquire()){
@@ -41,7 +45,7 @@ public class Student extends Thread{
 
                     this.monitorChair.acquire();
                     this.isSleep.release();
-                    this.attending.acquire();
+                    this.call.acquire();
                     this.corridorChairs.release();
                     this.monitorChair.release();
 
